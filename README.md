@@ -1,6 +1,6 @@
-# 🚀 Polyquity
 
-## AI-Powered Advisory Agent for a Blockchain-Based IPO Bidding System
+
+## Hybrid Vector-Relational IPO Recommendation & RAG Engine
 
 Polyquity is an AI-powered financial advisory agent that assists investors participating in a blockchain-based IPO bidding platform. It combines structured financial data, prospectus retrieval, vector search, and LLM reasoning to generate personalized IPO recommendations.
 
