@@ -1,20 +1,41 @@
-# Polyquity
-AI-Powered Advisory Agent for a Blockchain-Based IPO Bidding System.
+# 🚀 Polyquity
 
-Quick links:
-- `./data_pipeline/`
-- `./tools/`
-- `./database/schema.sql`
+## AI-Powered Advisory Agent for a Blockchain-Based IPO Bidding System
 
-## 1) Prerequisites (Windows)
-- Python 3.12+ installed
-- PostgreSQL + pgAdmin installed: https://www.postgresql.org/download/
-- pgvector installed/enabled for your Postgres instance: https://github.com/pgvector/pgvector
-- Pinata account (to upload prospectus PDFs): https://pinata.cloud/
-- DataStax Astra DB Serverless (vector) database (for prospectus chunk storage/search)
+Polyquity is an AI-powered financial advisory agent that assists investors participating in a blockchain-based IPO bidding platform. It combines structured financial data, prospectus retrieval, vector search, and LLM reasoning to generate personalized IPO recommendations.
 
-## 2) Install Dependencies (PowerShell)
-From the repo root:
+---
+
+## 📂 Project Structure
+
+```text
+.
+├── agents/
+├── data_pipeline/
+├── database/
+│   └── schema.sql
+├── tools/
+├── requirements.txt
+└── README.md
+```
+
+---
+
+# 🛠 Prerequisites
+
+| Requirement | Purpose |
+|-------------|---------|
+| Python 3.12+ | Backend runtime |
+| PostgreSQL | Structured IPO & transaction storage |
+| pgvector | Vector extension for PostgreSQL |
+| pgAdmin *(optional)* | Database management |
+| Pinata | Prospectus PDF hosting |
+| Astra DB Serverless | Vector database for prospectus embeddings |
+| OpenAI API Key | LLM-powered reasoning |
+
+---
+
+# ⚙️ Installation
 
 ```powershell
 python -m venv venv
@@ -22,70 +43,170 @@ python -m venv venv
 pip install -r requirements.txt
 ```
 
-## 3) Environment Variables
-Copy `.env.example` to `.env` and fill values.
+---
 
-Minimum required keys:
-- Postgres: `POSTGRES_HOST`, `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_PORT`
-- Astra: `ASTRA_DB_APPLICATION_TOKEN`, `ASTRA_DB_API_ENDPOINT`
-- Pinata: `PINATA_GATEWAY` (default `gateway.pinata.cloud` is fine)
-- LLM: `OPENAI_API_KEY` (needed for `./tools/prospectus_tool.py` and the agent)
+# 🔑 Environment Variables
 
-Optional tuning keys (pipeline):
-- `CHUNK_SIZE`, `CHUNK_OVERLAP`, `BATCH_SIZE`
+Copy `.env.example` to `.env` and configure:
 
-## 4) PostgreSQL Setup
-1. Create a database (example name used by code: `POLYQUITY_DATA`).
-2. Run the schema file: `./database/schema.sql`
+## PostgreSQL
 
-Example using `psql`:
+```text
+POSTGRES_HOST=
+POSTGRES_DB=
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_PORT=
+```
+
+## Astra DB
+
+```text
+ASTRA_DB_APPLICATION_TOKEN=
+ASTRA_DB_API_ENDPOINT=
+```
+
+## Pinata
+
+```text
+PINATA_GATEWAY=gateway.pinata.cloud
+```
+
+## OpenAI
+
+```text
+OPENAI_API_KEY=
+```
+
+## Optional Pipeline Settings
+
+```text
+CHUNK_SIZE=
+CHUNK_OVERLAP=
+BATCH_SIZE=
+```
+
+---
+
+# 🗄 PostgreSQL Setup
+
+Create a database named:
+
+```text
+POLYQUITY_DATA
+```
+
+Run the schema:
 
 ```powershell
 psql -U postgres -d POLYQUITY_DATA -f .\database\schema.sql
 ```
 
-If you prefer pgAdmin: open Query Tool and run the contents of `./database/schema.sql`.
+Or execute `database/schema.sql` using pgAdmin Query Tool.
 
-## 5) Pinata Setup (Get CID)
-1. Upload the IPO prospectus PDF to Pinata.
-2. Copy the CID (looks like `bafy...`). You will pass this CID into the ETL script.
+---
 
-## 6) Astra DB Setup (Token + Endpoint + Collection)
-1. Create an Astra DB Serverless database with Vector enabled.
-2. In Data Explorer, create a collection named `demo`.
-   - Current code uses `db.get_collection("demo")` in a few places.
-3. Generate an Application Token and copy it (starts with `AstraCS:...`).
-4. Copy the API Endpoint from the database details page.
-   - Looks like: `https://<DB_ID>-<REGION>.apps.astra.datastax.com`
+# 📄 Pinata Setup
 
-Docs:
-- https://docs.datastax.com/en/astra-db-serverless/get-started/quickstart.html
-- https://docs.datastax.com/en/astra/docs/obtaining-database-credentials.html
+1. Upload the IPO prospectus PDF.
+2. Copy the generated CID (`bafy...`).
 
-## 7) Run ETL (Insert into Postgres + Upload Prospectus to Astra)
-1. Pick an IPO name from Chittorgarh (use the exact IPO name): https://www.chittorgarh.com/
-2. Get the prospectus PDF CID from Pinata.
-3. Generate a UUID (temporary is fine): https://www.uuidgenerator.net/
-4. Update the `if __name__ == "__main__":` call in `./data_pipeline/extractor.py` with:
-   - `ipo_id` (UUID string)
-   - `name` (IPO name string)
-   - `ipo_cid` (Pinata CID string)
+---
 
-Run:
+# ☁️ Astra DB Setup
+
+1. Create an Astra Serverless database with Vector Search enabled.
+2. Create a collection named:
+
+```text
+demo
+```
+
+3. Generate an Application Token (`AstraCS:...`).
+4. Copy the API Endpoint.
+
+Example:
+
+```text
+https://<DB_ID>-<REGION>.apps.astra.datastax.com
+```
+
+---
+
+# 📊 ETL Pipeline
+
+For each IPO:
+
+1. Select an IPO from Chittorgarh.
+2. Upload its prospectus to Pinata.
+3. Generate a UUID.
+4. Update `data_pipeline/extractor.py`:
+
+```python
+ipo_id
+name
+ipo_cid
+```
+
+5. Run:
 
 ```powershell
 python .\data_pipeline\extractor.py
 ```
 
-Repeat for ~9 IPOs (or as needed).
+Repeat for approximately **9 IPOs**.
 
-## 8) Add Transactions (Manual)
-Add sample rows to the `transaction` table for the inserted IPOs (needed for recommendations).
+---
 
-## 9) Run the Agent
-Pick a `wallet_address` that exists in `transaction` and run:
+# 💰 Add Sample Transactions
+
+Insert sample rows into the `transaction` table.
+
+These records are used by the recommendation engine.
+
+---
+
+# 🤖 Run the Recommendation Agent
+
+Use a wallet address that exists in the `transaction` table.
 
 ```powershell
 python -m agents.recommendation_agent
+```
+
+---
+
+# 🏗 Technology Stack
+
+| Category | Technology |
+|-----------|------------|
+| Language | Python |
+| Database | PostgreSQL |
+| Vector Database | Astra DB |
+| Vector Extension | pgvector |
+| LLM | OpenAI |
+| Storage | Pinata (IPFS) |
+| Framework | LangChain |
+
+---
+
+# 📌 Workflow
+
+```text
+IPO Prospectus
+      │
+      ▼
+ Pinata (IPFS)
+      │
+      ▼
+ ETL Pipeline
+ ┌────┴────┐
+ ▼         ▼
+PostgreSQL Astra DB
+ └────┬────┘
+      ▼
+AI Advisory Agent
+      ▼
+Personalized IPO Recommendation
 ```
 
