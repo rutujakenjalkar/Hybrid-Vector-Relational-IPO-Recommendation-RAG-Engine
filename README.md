@@ -2,8 +2,7 @@
 
 ## Hybrid Vector-Relational IPO Recommendation & RAG Engine
 
-Hybrid Vector-Relational IPO Recommendation & RAG Engine is an AI-powered financial advisory agent that optimizes investor participation in upcoming IPO markets. It dynamically aggregates historical user portfolios into multi-dimensional profile vectors to execute native KNN similarity matches within PostgreSQL (pgvector), processes real-time news data via a specialized FinBERT transformer for domain-specific sentiment analysis, and routes unstructured prospectus queries through an AstraDB-backed RAG pipeline to generate deterministic, zero-hallucination investment recommendations.🚀 Final Checklist Before SavingCopy/Paste this directly into your LinkedIn Projects section.Use the "Add Media / Link" button right below it to pin your Loom video demo and GitHub repository.You now have a clean, institutional-grade description that perfectly showcases your engineering depth. When you are ready, what is the next section of your resume or portfolio you would like to polish?
-
+Hybrid Vector-Relational IPO Recommendation & RAG Engine is an AI-powered financial advisory agent that optimizes investor participation in upcoming IPO markets. It dynamically aggregates historical user portfolios into multi-dimensional profile vectors to execute native KNN similarity matches within PostgreSQL (pgvector), processes real-time news data via a specialized FinBERT transformer for domain-specific sentiment analysis, and routes unstructured prospectus queries through an AstraDB-backed RAG pipeline to generate deterministic, zero-hallucination investment recommendations.
 ---
 
 ## 📂 Project Structure
