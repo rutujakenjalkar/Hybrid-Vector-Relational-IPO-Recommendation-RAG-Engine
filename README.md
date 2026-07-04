@@ -9,6 +9,7 @@ Hybrid Vector-Relational IPO Recommendation & RAG Engine is an AI-powered financ
 [Click here to see the Data Loading Process](https://www.loom.com/share/7835d4a881a24ddca0633da0131f4bd5)
 
 [Click here to see the actual agent working](https://www.loom.com/share/9eaa7cedca8a4a559aa42d22c58f0a93)
+
 ---
 
 ## 📂 Project Structure
